@@ -1,0 +1,28 @@
+cmake_minimum_required(VERSION 3.5)
+
+project(Model_Cloud_Renderer)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS ON)
+
+link_directories(${CMAKE_SOURCE_DIR}/lib)
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
+set(LIBS glfw3dll opengl32 assimp)
+add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+
+add_library(STB_IMAGE "src/stb_image.cpp")
+set(LIBS ${LIBS} STB_IMAGE)
+
+add_library(GLAD "src/glad.c")
+set(LIBS ${LIBS} GLAD)
+
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+
+add_executable(Model_Cloud_Renderer src/main.cpp)
+target_link_libraries(Model_Cloud_Renderer ${LIBS})
+
+
+
+
