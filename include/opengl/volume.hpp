@@ -8,7 +8,7 @@
 #include <iostream>
 
 #define COMPUTE_SHADER_PATH "../resources/shaders/model2sdf.comp"
-#define GRID_SIZE 256
+#define GRID_SIZE 128
 
 class Volume
 {

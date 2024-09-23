@@ -36,7 +36,7 @@ void main() {
     }
     distance = max(distance, 0);
     float maxDistance = length(AABBMax - AABBMin) / 2;
-    if(distance < maxDistance * 0.01)
+    if(distance < maxDistance * 0.02)
         imageStore(SDF, voxelCoord, vec4(1));
     else
         imageStore(SDF, voxelCoord, vec4(0));

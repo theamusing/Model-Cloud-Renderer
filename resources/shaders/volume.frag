@@ -3,7 +3,7 @@
 #include "/include/light.glsl"
 
 #define MAX_STEPS 256
-#define extinctionCoef 0.05
+#define extinctionCoef 1
 
 uniform mat4 model;
 uniform mat4 view;
@@ -24,7 +24,7 @@ vec3 worldPos2Coord(vec3 worldPos);
 
 void main()
 {
-    vec3 baseColor = vec3(1);
+    vec3 baseColor = vec3(10);
 
     vec3 dir = normalize(WorldPos - cameraPos);
     vec3 near, far;
@@ -49,7 +49,7 @@ void main()
     }
 
     float stepSize = length(far - near) / float(MAX_STEPS);
-    vec3 color = vec3(0.0);
+    vec4 color = vec4(0.0);
     float transmittance = 1.0;
 
     // ray marching loop
@@ -58,10 +58,11 @@ void main()
         vec3 pos = near + dir * stepSize * float(i + 0.5);
         vec3 coord = worldPos2Coord(pos);
         float density = texture(SDF, coord).r;
+        density = max(0, density);
         transmittance *= exp(-density * extinctionCoef * stepSize);
-        color += transmittance * density * baseColor * stepSize;
+        color += transmittance * density * vec4(baseColor, 1.0) * stepSize;
     }
-	FragColor = vec4(color, transmittance);
+	FragColor = color;
 }
 
 bool AABBIntersect(vec3 rayOrigin, vec3 rayDir, vec3 boxMin, vec3 boxMax, out vec3 near, out vec3 far)
