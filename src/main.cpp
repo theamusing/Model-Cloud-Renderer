@@ -34,11 +34,13 @@ float lastFrame = 0.0f;
 
 int main()
 {
+
+
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #ifdef __APPLE__
@@ -70,9 +72,6 @@ int main()
         return -1;
     }
 
-    // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
-    stbi_set_flip_vertically_on_load(true);
-
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
@@ -80,8 +79,8 @@ int main()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // build and compile shaders
     // -------------------------
-    Shader modelShader("../resources/shaders/model_lighting.vs", "../resources/shaders/model_lighting.fs");
-    Shader volumeShader("../resources/shaders/volume.vs", "../resources/shaders/volume.fs");   
+    Shader modelShader("../resources/shaders/model_lighting.vert", "../resources/shaders/model_lighting.frag");
+    Shader volumeShader("../resources/shaders/volume.vert", "../resources/shaders/volume.frag");   
 
     // load models
     // -----------
@@ -121,7 +120,7 @@ int main()
         modelShader.use();
 
         // view/projection transformations
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
         modelShader.setMat4("projection", projection);
         modelShader.setMat4("view", view);
@@ -139,7 +138,7 @@ int main()
         ourLightManager.Apply(modelShader);
 
         // render the model
-        ourModel.Draw(modelShader);
+        // ourModel.Draw(modelShader);
 
         // render volume
         glDisable(GL_DEPTH_TEST);
@@ -151,13 +150,13 @@ int main()
 
         // model transformation
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -0.3f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));	// it's a bit too big for our scene, so scale it down
+        model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f)); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));	// it's a bit too big for our scene, so scale it down
         volumeShader.setMat4("model", model);
 
         // set camera position
         volumeShader.setVec3("cameraPos", camera.Position);
-
+        
         // render the model
         ourVolume.Draw(volumeShader);
 

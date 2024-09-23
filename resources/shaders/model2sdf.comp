@@ -1,0 +1,55 @@
+#version 460 core
+
+layout(local_size_x = 8, local_size_y = 8, local_size_z = 8) in;
+
+layout(rgba32f, binding = 0) uniform image3D SDF;
+
+struct MeshData
+{
+    vec4 position;
+    vec4 normal;
+};
+
+layout(std430, binding = 1) buffer dataBuffer {
+    MeshData meshData[];
+};
+
+uniform uint gridSize;
+uniform vec3 AABBMax;
+uniform vec3 AABBMin;
+
+float getSignedDistance(vec3 p, vec3 a, vec3 b, vec3 c, vec3 n);
+
+void main() {
+    ivec3 voxelCoord = ivec3(gl_GlobalInvocationID.xyz);
+    vec3 worldPos = AABBMin + (AABBMax - AABBMin) * (gl_GlobalInvocationID.xyz + vec3(0.5)) / float(gridSize);
+    float distance = 1e15;
+    for (int i = 0; i < meshData.length(); i += 3) 
+    {
+        vec3 v1 = meshData[i].position.xyz;
+        vec3 v2 = meshData[i+1].position.xyz;
+        vec3 v3 = meshData[i+2].position.xyz;
+        vec3 normal = meshData[i].normal.xyz;
+        float d = getSignedDistance(worldPos, v1, v2, v3, normal);
+        if(abs(d) < abs(distance))
+            distance = d;
+    }
+    distance = max(distance, 0);
+    float maxDistance = length(AABBMax - AABBMin) / 2;
+    if(distance < maxDistance * 0.01)
+        imageStore(SDF, voxelCoord, vec4(1));
+    else
+        imageStore(SDF, voxelCoord, vec4(0));
+}
+
+float getSignedDistance(vec3 p, vec3 a, vec3 b, vec3 c, vec3 n)
+{
+    float d = dot(p - a, n);
+    float d1 = length(p - a);
+    float d2 = length(p - b);
+    float d3 = length(p - c);
+    if(d > 0)
+        return min(d1, min(d2, d3));
+    else
+        return -min(d1, min(d2, d3));
+}
