@@ -90,7 +90,7 @@ int main()
 
     // generate a light source
     LightManager ourLightManager;
-    // ourLightManager.addPointLight(glm::vec3(2.0f, 0.0f, 2.0f), glm::vec3(1.0f, 0.0f, 0.0f), 10.0f);
+    // ourLightManager.addPointLight(glm::vec3(-2.0f, 0.0f, 2.0f), glm::vec3(1.0f, 0.0f, 0.0f), 10.0f);
     // ourLightManager.addSpotLight(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.6f, 5.0f, 15.0f);
     
     // draw in wireframe
@@ -112,7 +112,7 @@ int main()
 
         // render
         // ------
-        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+        glClearColor(0.05f, 0.65f, 0.8f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // render model

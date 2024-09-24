@@ -112,18 +112,18 @@ float getTransmittanceLight(vec3 pos, vec3 lightDir, vec3 lightPos, bool directi
         transmittance *= exp(-density * extinctionCoef * stepSize);
         pos += lightDir * stepSize;
     }
-    return transmittance;
+    return transmittance;//2 * transmittance * (1 - transmittance * transmittance);
 }
 
 // viewDir: pos ==> camera
 vec3 calculateLightVolume(vec3 pos, vec3 viewDir)
 {
-    vec3 baseColor = vec3(0.1);
+    vec3 baseColor = vec3(0.7);
     vec3 result = baseColor + GL_AmbientLight;
 
     // calculate directional light   
     vec3 lightDir = -vec3(GL_DirectionalLight.direction);
-    float phase = dualLobPhase(0.5, -0.5, 0.2, dot(lightDir, viewDir));
+    float phase = dualLobPhase(0.5, -0.5, 0.3, dot(lightDir, viewDir));
     float transmittance = getTransmittanceLight(pos, lightDir, vec3(0), true);
     float intensity = GL_DirectionalLight.intensity;
     result += phase * transmittance * intensity * vec3(GL_DirectionalLight.color);
@@ -133,7 +133,7 @@ vec3 calculateLightVolume(vec3 pos, vec3 viewDir)
     {
         float distance = length(vec3(GL_PointLight[i].position) - pos);
         lightDir = normalize(vec3(GL_PointLight[i].position) - pos);
-        phase = dualLobPhase(0.5, -0.5, 0.2, dot(lightDir, viewDir));
+        phase = dualLobPhase(0.5, -0.5, 0.3, dot(lightDir, viewDir));
         transmittance = getTransmittanceLight(pos, lightDir, vec3(GL_PointLight[i].position), false);
         intensity = GL_PointLight[i].intensity / (distance * distance);
         result += phase * transmittance * intensity * vec3(GL_PointLight[i].color);
@@ -144,7 +144,7 @@ vec3 calculateLightVolume(vec3 pos, vec3 viewDir)
     {
         float distance = length(vec3(GL_SpotLight[i].position) - pos);
         lightDir = normalize(vec3(GL_SpotLight[i].position) - pos);
-        phase = dualLobPhase(0.5, -0.5, 0.2, dot(lightDir, viewDir));
+        phase = dualLobPhase(0.5, -0.5, 0.3, dot(lightDir, viewDir));
         transmittance = getTransmittanceLight(pos, lightDir, vec3(GL_SpotLight[i].position), false);
         float spotEffect = dot(-vec3(GL_SpotLight[i].direction), lightDir);
         if(spotEffect > cos(GL_SpotLight[i].cutOff))
