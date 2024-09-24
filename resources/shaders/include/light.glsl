@@ -1,6 +1,8 @@
 #ifndef LIGHT_GLSL
 #define LIGHT_GLSL
 
+#define PI 3.14159265359
+
 struct PointLight {
     vec4 position;
     vec4 color;
@@ -42,6 +44,24 @@ layout(std430, binding=1) buffer GL_SpotLight_Buffer
 {
     SpotLight GL_SpotLight[];
 };
+
+float schlickPhase(float k, float cosTheta)
+{
+    float a1 = 1 - k * cosTheta;
+    return 1.0 / (4 * PI) * (1 - k * k) / (a1 * a1);
+}
+
+float hgPhase(float g, float cosTheta)
+{
+	float numer = 1.0f - g * g;
+	float denom = 1.0f + g * g + 2.0f * g * cosTheta;
+	return numer / (4.0f * PI * denom * sqrt(denom));
+}
+
+float dualLobPhase(float g0, float g1, float w, float cosTheta)
+{
+	return mix(hgPhase(g0, cosTheta), hgPhase(g1, cosTheta), w);
+}
 
 // viewDir: pos ==> camera
 vec3 calculateLight(vec3 pos, vec3 normal, vec3 viewDir, vec3 kd, vec3 ks)
@@ -93,6 +113,5 @@ vec3 calculateLight(vec3 pos, vec3 normal, vec3 viewDir, vec3 kd, vec3 ks)
 
     return result;
 }
-
 
 #endif /* LIGHT_GLSL */

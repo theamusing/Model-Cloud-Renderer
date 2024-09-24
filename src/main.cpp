@@ -90,8 +90,8 @@ int main()
 
     // generate a light source
     LightManager ourLightManager;
-    ourLightManager.addPointLight(glm::vec3(2.0f, 0.0f, 2.0f), glm::vec3(1.0f, 0.0f, 0.0f), 1.0f);
-    ourLightManager.addSpotLight(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.6f, 5.0f, 15.0f);
+    // ourLightManager.addPointLight(glm::vec3(2.0f, 0.0f, 2.0f), glm::vec3(1.0f, 0.0f, 0.0f), 10.0f);
+    // ourLightManager.addSpotLight(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.6f, 5.0f, 15.0f);
     
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -157,6 +157,8 @@ int main()
         // set camera position
         volumeShader.setVec3("cameraPos", camera.Position);
         
+        // apply light to shader
+        ourLightManager.Apply(volumeShader);
         // render the model
         ourVolume.Draw(volumeShader);
 

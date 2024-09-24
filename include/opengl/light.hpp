@@ -36,12 +36,12 @@ public:
     LightManager()
     {
         // init ambient light
-        ambientLight = glm::vec3(0.05f, 0.1f, 0.1f);
+        ambientLight = glm::vec3(0.1f, 0.1f, 0.1f);
 
         // init directional light
         directionalLight.direction = glm::vec3(-1.0f, 0.0f, 0.0f);
         directionalLight.color = glm::vec3(1.0f, 0.4f, 0.0f);
-        directionalLight.intensity = 0.4f;
+        directionalLight.intensity = 10.0f;
 
         // init buffers
         glGenBuffers(1, &pointLightBuffer);
