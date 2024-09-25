@@ -6,7 +6,7 @@
 #define MAX_LIGHT_STEPS 16
 
 #define absorptionCoef 1
-#define scatteringCoef 4
+#define scatteringCoef 6
 #define extinctionCoef (absorptionCoef + scatteringCoef)
 
 uniform mat4 model;
@@ -99,7 +99,7 @@ vec3 worldPos2Coord(vec3 worldPos)
 
 float getTransmittanceLight(vec3 pos, vec3 lightDir, vec3 lightPos, bool directional = false)
 {
-    float stepSize = length((model * vec4(AABBMax, 1.0) - model * vec4(AABBMin, 1.0)).xyz) / MAX_LIGHT_STEPS;
+    float stepSize = length((model * vec4(AABBMax, 1.0) - model * vec4(AABBMin, 1.0)).xyz) / MAX_LIGHT_STEPS / 2;
     if(!directional)
     {
         stepSize = min(stepSize, length(lightPos - pos) / MAX_LIGHT_STEPS);
@@ -112,7 +112,7 @@ float getTransmittanceLight(vec3 pos, vec3 lightDir, vec3 lightPos, bool directi
         transmittance *= exp(-density * extinctionCoef * stepSize);
         pos += lightDir * stepSize;
     }
-    return transmittance;//2 * transmittance * (1 - transmittance * transmittance);
+    return 2 * transmittance * (1 - transmittance * transmittance);
 }
 
 // viewDir: pos ==> camera

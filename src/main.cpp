@@ -112,7 +112,7 @@ int main()
 
         // render
         // ------
-        glClearColor(0.05f, 0.65f, 0.8f, 1.0f);
+        glClearColor(0.05f, 0.65f, 0.85f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // render model

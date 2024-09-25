@@ -70,6 +70,12 @@ private:
                 }
             }
         }
+
+        // expand AABB a little bit
+        glm::vec3 diff = AABB[1] - AABB[0];
+        AABB[0] -= diff * 0.1f;
+        AABB[1] += diff * 0.1f;
+
         vertices = {
             // front
             glm::vec3(AABB[0].x, AABB[0].y, AABB[0].z),
