@@ -39,7 +39,7 @@ public:
         ambientLight = glm::vec3(0.1f, 0.1f, 0.1f);
 
         // init directional light
-        directionalLight.direction = glm::vec3(-1.0f, 0.0f, 0.0f);
+        directionalLight.direction = glm::vec3(1.0f, 0.0f, 0.0f);
         directionalLight.color = glm::vec3(0.8f, 0.4f, 0.2f);
         directionalLight.intensity = 8.0f;
 

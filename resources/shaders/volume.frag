@@ -6,7 +6,7 @@
 #define MAX_LIGHT_STEPS 16
 
 #define absorptionCoef 1
-#define scatteringCoef 6
+#define scatteringCoef 4
 #define extinctionCoef (absorptionCoef + scatteringCoef)
 
 uniform mat4 model;

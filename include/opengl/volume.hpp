@@ -48,13 +48,14 @@ private:
     GLuint SDF;
     void setupAABB()
     {
+        std::cout << "vertices number: " << model.meshes[0].vertices.size() << std::endl;
         // generate AABB for volume
         for (unsigned int i = 0; i < model.meshes.size(); i++)
         {
             for (unsigned int j = 0; j < model.meshes[i].vertices.size(); j++)
             {
                 glm::vec3 vertex = model.meshes[i].vertices[j].Position;
-                if (j == 0)
+                if (i == 0 && j == 0)
                 {
                     AABB[0] = AABB[1] = vertex;
                 }
@@ -157,7 +158,7 @@ private:
                 meshData.push_back(data);
             }
         }
-
+        std::cout<< "meshData size: " << meshData.size() << std::endl;
         glBufferData(GL_SHADER_STORAGE_BUFFER, meshData.size() * sizeof(MeshData), meshData.data(), GL_STATIC_DRAW);
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, meshBuffer);
 

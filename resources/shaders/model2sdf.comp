@@ -20,46 +20,100 @@ uniform uint gridSize;
 uniform vec3 AABBMax;
 uniform vec3 AABBMin;
 
-float getSignedDistance(vec3 p, vec3 a, vec3 b, vec3 c, vec3 n);
+vec3 fixNormal(vec3 a, vec3 b, vec3 c, vec3 n);
+bool pointInTriangle(vec3 p, vec3 a, vec3 b, vec3 c);
+float getDistance(vec3 p, vec3 a, vec3 b, vec3 c, vec3 n);
+bool rayTriangleIntersect(vec3 rayOrigin, vec3 rayDir, vec3 a, vec3 b, vec3 c);
 
 void main() {
     ivec3 voxelCoord = ivec3(gl_GlobalInvocationID.xyz);
     vec3 worldPos = AABBMin + (AABBMax - AABBMin) * (gl_GlobalInvocationID.xyz + vec3(0.5)) / float(gridSize);
-    float distance = 1e15;
-    for (int i = 0; i < meshData.length(); i += 3) 
+    float distance = 1e30;
+    int count = 0;// count of intersection with triangle faces
+
+    // loop to get nearest face and intersection count
+    for (uint i = 0; i < meshData.length(); i += 3) 
     {
         vec3 v1 = meshData[i].position.xyz;
         vec3 v2 = meshData[i+1].position.xyz;
         vec3 v3 = meshData[i+2].position.xyz;
         vec3 normal = meshData[i].normal.xyz;
-        float d = getSignedDistance(worldPos, v1, v2, v3, normal);
-        if(abs(d) < abs(distance))
-            distance = d;
+        normal = fixNormal(v1, v2, v3, normal);
+
+        vec3 dir = normalize(vec3(1,0.6,0.2));// any direction works
+        if(rayTriangleIntersect(worldPos, dir, v1, v2, v3))
+            count++;
+        float d = getDistance(worldPos, v1, v2, v3, normal);
+        distance = min(distance, d);
     }
-    distance = max(distance, 0);
+    if(count % 2 == 1)// inside the Volume
+    {
+        distance = -distance;
+    }
     float maxDistance = length(AABBMax - AABBMin) / 2;
 
     vec3 uv = gl_GlobalInvocationID.xyz / float(gridSize);
-    float density = cloudDensity(uv);
+    float density = cloudDensity(uv, 4);
     density = clamp(density, 0, 1);
 
-    float tolerateDistance = maxDistance * 0.1 * density;
+    float tolerateDistance = maxDistance * 0.06 * density;
     if(distance < tolerateDistance && distance > 0)
         imageStore(SDF, voxelCoord, vec4(density * (1 - distance / tolerateDistance)));
-    else if(distance == 0)
+    else if(distance <= 0)
         imageStore(SDF, voxelCoord, vec4(density));
     else
         imageStore(SDF, voxelCoord, vec4(0));
 }
 
-float getSignedDistance(vec3 p, vec3 a, vec3 b, vec3 c, vec3 n)
+vec3 fixNormal(vec3 a, vec3 b, vec3 c, vec3 n)
 {
-    float d = dot(p - a, n);
+    vec3 normal = normalize(cross(a - b, a - c));
+    if(dot(normal, n) < 0)
+        normal = - normal;
+    return normal;
+}
+
+bool pointInTriangle(vec3 p, vec3 a, vec3 b, vec3 c) 
+{
+    vec3 n = cross(a - b, a - c);
+    vec3 cross1 = cross(b - a, p - a);
+    vec3 cross2 = cross(c - b, p - b);
+    vec3 cross3 = cross(a - c, p - c);
+    return dot(n, cross1) >= 0 && dot(n, cross2) >= 0 && dot(n, cross3) >= 0;
+}
+
+float getDistance(vec3 p, vec3 a, vec3 b, vec3 c, vec3 n)
+{
+    float d = abs(dot(p - a, n));
+    if(pointInTriangle(p, a, b, c))
+        return d;
     float d1 = length(p - a);
     float d2 = length(p - b);
     float d3 = length(p - c);
-    if(d > 0)
-        return min(d1, min(d2, d3));
-    else
-        return -min(d1, min(d2, d3));
+    return min(d1, min(d2, d3));
+}
+
+bool rayTriangleIntersect(vec3 rayOrigin, vec3 rayDir, vec3 a, vec3 b, vec3 c)
+{
+    vec3 e1 = b - a;
+    vec3 e2 = c - a;
+    vec3 pvec = cross(rayDir, e2);
+    float det = dot(e1, pvec);
+
+    if (abs(det) < 1e-8) return false;
+
+    float invDet = 1 / det;
+    vec3 tvec = rayOrigin - a;
+    float u = dot(tvec, pvec) * invDet;
+    if (u < 0 || u > 1) 
+        return false;
+
+    vec3 qvec = cross(tvec, e1);
+    float v = dot(rayDir, qvec) * invDet;
+    if (v < 0 || u + v > 1) 
+        return false;
+
+    float t = dot(e2, qvec) * invDet;
+    return t > 0;
+
 }

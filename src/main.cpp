@@ -23,7 +23,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -84,9 +84,9 @@ int main()
 
     // load models
     // -----------
-    Model ourModel("../resources/models/bunny.obj", false);
+    Model ourModel("../resources/models/bunny/bunny.obj", false);
 
-    Volume ourVolume("../resources/models/bunny.obj", false);
+    Volume ourVolume("../resources/models/bunny/bunny.obj", false);
 
     // generate a light source
     LightManager ourLightManager;
@@ -127,8 +127,8 @@ int main()
 
         // model transformation
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -0.3f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));	// it's a bit too big for our scene, so scale it down
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); 
+        model = glm::scale(model, glm::vec3(0.01f, .01f, .01f));	
         modelShader.setMat4("model", model);
 
         // set camera position
@@ -150,8 +150,8 @@ int main()
 
         // model transformation
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));	// it's a bit too big for our scene, so scale it down
+        model = glm::translate(model, glm::vec3(0.5f, -1.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(10.f, 10.f, 10.f));	
         volumeShader.setMat4("model", model);
 
         // set camera position
