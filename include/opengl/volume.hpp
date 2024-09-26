@@ -158,7 +158,6 @@ private:
                 meshData.push_back(data);
             }
         }
-        std::cout<< "meshData size: " << meshData.size() << std::endl;
         glBufferData(GL_SHADER_STORAGE_BUFFER, meshData.size() * sizeof(MeshData), meshData.data(), GL_STATIC_DRAW);
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, meshBuffer);
 

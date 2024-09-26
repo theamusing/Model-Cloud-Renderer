@@ -142,7 +142,7 @@ float cloudDensity(vec3 uv, float freq = 4)
     
     // cloud shape modeled after the GPU Pro 7 chapter
     float cloud = remap(fbm.x, wfbm - 1, 1, 0, 1);
-    cloud = remap(cloud, .5, 1., 0., 1.);
+    cloud = remap(cloud, .6, 1., 0., 1.);
     return cloud;
 }
 

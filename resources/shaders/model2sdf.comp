@@ -56,7 +56,7 @@ void main() {
     float density = cloudDensity(uv, 4);
     density = clamp(density, 0, 1);
 
-    float tolerateDistance = maxDistance * 0.06 * density;
+    float tolerateDistance = maxDistance * 0.08 * density;
     if(distance < tolerateDistance && distance > 0)
         imageStore(SDF, voxelCoord, vec4(density * (1 - distance / tolerateDistance)));
     else if(distance <= 0)
