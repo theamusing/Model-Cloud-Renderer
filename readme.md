@@ -122,7 +122,7 @@ This already looks like a cloud. However, you will notice that the edges of the 
     tolerate_distance = some_value_according_to_density
 
     if(distance < tolerate_distance) // inside the model
-        return density * max(distance, 0) / tolerate_distance
+        return density * (1 - max(distance, 0) / tolerate_distance)
     else
         return 0
 ```
