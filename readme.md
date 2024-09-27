@@ -47,6 +47,7 @@ Imagine you have a model and a bounding box for the model(for example, an AABB b
 This is what a SDF records. A 3D SDF is basically a 3d texture related to a bounding box, each pixel in it shows the distance of a point to the nearest triangle face. So why is it called **Signed** Distance Field? When the point is inside the model, the value of the distance will be recorded negative, and vise versa, so you knows whether a point is inside the model or not.
 
 Here is an example of a 2D SDF. The black circle is the edge. 3D SDF is similar. 
+
 <img src="resources/images/SDF.png" alt="Example Image" width="50%" height="50%">
 
 ### generate SDF from model
@@ -109,6 +110,7 @@ Finally we can sample the cloud's density. We can combine it with the SDF we jus
         return 0
 ```
 Here is what it looks like:
+
 <img src="resources/images/density.png" alt="density" width="50%" height="50%">
 
 This already looks like a cloud. However, you will notice that the edges of the model are still hard and look abrupt. We need to expand the edges a little bit to make it more fluffy. Here is a solution:
@@ -125,7 +127,9 @@ This already looks like a cloud. However, you will notice that the edges of the 
         return 0
 ```
 It will give a fluffy outlook:
+
 <img src="resources/images/fluffy.png" alt="density" width="50%" height="50%">
+
 So now you can see why we need to record a distance in SDF rather than just a bool :)
 
 In practice you also need to expand the AABB box a little bit. 
@@ -217,6 +221,7 @@ float hgPhase(float g, float cosTheta)
 }
 ```
 Phase function can lit up the volume from the light direction and generate the silver-lining effect on the clouds. 
+
 <img src="resources/images/6.png" alt="ray march" width="50%" height="50%">
 
 In practice, we want to make the cloud look brighter both from the front and from the back of the light direction. So we can use a combined phase function:
