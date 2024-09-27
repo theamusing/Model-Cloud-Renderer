@@ -83,7 +83,7 @@ You may wonder why we need to calculate the signed distance, since we only need 
 Now we get a SDF texture, we can describe the shape of the cloud. It's time to calculate the density within the cloud. 
 
 The most popular way to generate density within the cloud is using noise. Here we use a combination of 3D **Perlin noise** and **Worley noise** to generate cloud-like noise.
-<img src="resources/images/Perlin.png" alt="Perlin Noise" width="50%" height="50%"><img src="resources/images/Worley.jpg" alt="Worley Noise" width="50%" height="50%">
+<img src="resources/images/Perlin.png" alt="Perlin Noise" width="30%" height="50%"><img src="resources/images/Worley.jpg" alt="Worley Noise" width="30%" height="50%">
 
 ```
     // I'm not familiar with the mathematical principles of generating noise and FBM :(
@@ -239,7 +239,7 @@ The **transmittance_light** describes how much light can go through the volume t
     return transmittance_light
 ```
 **With and without light transmittance:**
-<img src="resources/images/trans.png" alt="with trans" width="50%" height="50%"><img src="resources/images/notrans.png" alt="no trans" width="50%" height="50%">
+<img src="resources/images/trans.png" alt="with trans" width="30%" height="50%"><img src="resources/images/notrans.png" alt="no trans" width="30%" height="50%">
 
 And here is a little trick: Use
 ```
