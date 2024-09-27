@@ -138,7 +138,7 @@ You can check [volume.hpp](./include/opengl/volume.hpp) and [model2sde.comp](./r
 ### ray marching
 To render a volume, we do not need to send the model's mesh data to GPU. Instead we'll just use the vertices of the AABB box, our SDF texture and the density sampler. And we'll use ray march to render it.
 
-The principle of ray marching is quite easy: For every fragments, generate a ray from your camera towards that fragment, step forward a little bit every time, and accumulate the sampled result together. [Here]() is a really good tutorial on what is ray-marching. For any visible point in a volume, the color of this point is an accumulation of color from points behind it. And we need to know how to accumulate these colors.
+The principle of ray marching is quite easy: For every fragments, generate a ray from your camera towards that fragment, step forward a little bit every time, and accumulate the sampled result together. [Here](https://medium.com/@calebleak/raymarching-voxel-rendering-58018201d9d6) is a good tutorial to learn about ray-marching. For any visible point in a volume, the color of this point is an accumulation of color from points behind it. And we need to know how to accumulate these colors.
 
 As we walk deeper into the fog, the scenes around us become darker. This is because the intensity of light diminishes as the distance increases. We use **transmittance** to describe how much light is able to go through the fog. According to Beer's law, 
 ```
