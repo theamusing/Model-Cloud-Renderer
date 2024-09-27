@@ -16,6 +16,7 @@ public:
     // volume data
     Model model;
     glm::vec3 AABB[2]; // axis-aligned bounding box
+
     // constructor
     Volume(const char *path, bool flip = false) : model(path, flip)
     {
@@ -44,11 +45,10 @@ private:
     GLuint VAO, VBO, EBO;
     vector<glm::vec3> vertices;
     vector<unsigned int> indices;
-
     GLuint SDF;
+
     void setupAABB()
     {
-        std::cout << "vertices number: " << model.meshes[0].vertices.size() << std::endl;
         // generate AABB for volume
         for (unsigned int i = 0; i < model.meshes.size(); i++)
         {
@@ -161,7 +161,7 @@ private:
         glBufferData(GL_SHADER_STORAGE_BUFFER, meshData.size() * sizeof(MeshData), meshData.data(), GL_STATIC_DRAW);
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, meshBuffer);
 
-        // 调用 Compute Shader
+        // use Compute Shader
         glDispatchCompute(GRID_SIZE / 8, GRID_SIZE / 8, GRID_SIZE / 8);
         glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
         std::cout << "SDF generated" << std::endl;

@@ -59,6 +59,11 @@ public:
         spotLights.clear();
     }
 
+    void setAmbientLight(glm::vec3 color)
+    {
+        ambientLight = color;
+    }
+
     void setDirectionalLight(glm::vec3 direction, glm::vec3 color, float intensity)
     {
         directionalLight.direction = normalize(direction);

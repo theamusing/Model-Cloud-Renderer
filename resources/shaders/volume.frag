@@ -118,7 +118,7 @@ float getTransmittanceLight(vec3 pos, vec3 lightDir, vec3 lightPos, bool directi
 // viewDir: pos ==> camera
 vec3 calculateLightVolume(vec3 pos, vec3 viewDir)
 {
-    vec3 baseColor = vec3(0.7);
+    vec3 baseColor = vec3(0.3);
     vec3 result = baseColor + GL_AmbientLight;
 
     // calculate directional light   

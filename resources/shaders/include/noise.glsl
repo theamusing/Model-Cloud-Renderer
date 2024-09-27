@@ -131,19 +131,4 @@ vec4 worley_perlinFbm(vec3 uv, float freq)
     return res;
 }
 
-float cloudDensity(vec3 uv, float freq = 4)
-{
-    vec4 fbm = worley_perlinFbm(uv, freq);
-    
-    // worley fbms with different frequencies
-    float wfbm = fbm.y * 0.625 +
-        		 fbm.z * 0.125 +
-        		 fbm.w * 0.25; 
-    
-    // cloud shape modeled after the GPU Pro 7 chapter
-    float cloud = remap(fbm.x, wfbm - 1, 1, 0, 1);
-    cloud = remap(cloud, .6, 1., 0., 1.);
-    return cloud;
-}
-
 #endif

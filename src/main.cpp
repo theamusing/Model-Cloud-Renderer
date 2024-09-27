@@ -79,22 +79,19 @@ int main()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     // build and compile shaders
     // -------------------------
-    Shader modelShader("../resources/shaders/model_lighting.vert", "../resources/shaders/model_lighting.frag");
     Shader volumeShader("../resources/shaders/volume.vert", "../resources/shaders/volume.frag");   
 
     // load models
     // -----------
-    Model ourModel("../resources/models/bunny/bunny.obj", false);
-
     Volume ourVolume("../resources/models/bunny/bunny.obj", false);
 
-    // generate a light source
-    LightManager ourLightManager;
-    // ourLightManager.addPointLight(glm::vec3(-2.0f, 0.0f, 2.0f), glm::vec3(1.0f, 0.0f, 0.0f), 10.0f);
-    // ourLightManager.addSpotLight(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.6f, 5.0f, 15.0f);
-    
-    // draw in wireframe
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // generate light source
+    LightManager dayLight;
+    dayLight.setAmbientLight(glm::vec3(0.5f, 0.5f, 0.5f));
+
+    LightManager sunset;
+    sunset.setAmbientLight(glm::vec3(0.3f, 0.3f, 0.3f));
+    sunset.setDirectionalLight(glm::vec3(-1.0f, 0.5f, 1.0f), glm::vec3(1.0f, 0.4f, 0.0f), 5.0f);
 
     // render loop
     // -----------
@@ -115,53 +112,31 @@ int main()
         glClearColor(0.05f, 0.65f, 0.85f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // render model
-        glEnable(GL_DEPTH_TEST);
-        modelShader.use();
-
-        // view/projection transformations
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f);
-        glm::mat4 view = camera.GetViewMatrix();
-        modelShader.setMat4("projection", projection);
-        modelShader.setMat4("view", view);
-
-        // model transformation
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); 
-        model = glm::scale(model, glm::vec3(0.01f, .01f, .01f));	
-        modelShader.setMat4("model", model);
-
-        // set camera position
-        modelShader.setVec3("cameraPos", camera.Position);
-
-        // apply light to shader
-        ourLightManager.Apply(modelShader);
-
-        // render the model
-        // ourModel.Draw(modelShader);
-
         // render volume
         glDisable(GL_DEPTH_TEST);
         volumeShader.use();
 
         // view/projection transformations
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f);
+        glm::mat4 view = camera.GetViewMatrix();
         volumeShader.setMat4("projection", projection);
         volumeShader.setMat4("view", view);
 
         // model transformation
-        model = glm::mat4(1.0f);
+        glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.5f, -1.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(10.f, 10.f, 10.f));	
+        model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));	
         volumeShader.setMat4("model", model);
 
         // set camera position
         volumeShader.setVec3("cameraPos", camera.Position);
         
         // apply light to shader
-        ourLightManager.Apply(volumeShader);
+        dayLight.Apply(volumeShader);
+        // sunset.Apply(volumeShader);
+
         // render the model
         ourVolume.Draw(volumeShader);
-
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
